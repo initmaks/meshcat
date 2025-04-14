@@ -4,9 +4,10 @@ module.exports = [{
     entry: './src/index.js',
     output: {
         library: "MeshCat",
-        libraryTarget: 'umd'
+        libraryTarget: 'umd',
+        publicPath: ''
     },
-    watch: true,
+    watch: false,
     mode: "development",
     devtool: "eval-cheap-source-map"
 }, {
@@ -14,9 +15,10 @@ module.exports = [{
     output: {
         filename: "main.min.js",
         library: "MeshCat",
-        libraryTarget: 'umd'
+        libraryTarget: 'umd',
+        publicPath: ''
     },
-    watch: true,
+    watch: false,
     mode: "production",
     plugins: [
       new LicensePlugin({
