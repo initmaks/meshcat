@@ -18,6 +18,7 @@
     "@ffmpeg/ffmpeg": "^0.10.1",
     "ccapture.js": "aceslowman/ccapture.js#npm-fix",
     "dat.gui": "^0.7.7",
+    "has": "^1.0.4",
     "msgpack-lite": "^0.1.26",
     "three": "^0.132",
     "three-wtm": "^1.0",

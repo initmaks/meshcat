@@ -853,7 +853,7 @@ class Animator {
         this.time_scrubber.min(0);
         this.time_scrubber.max(this.duration);
         this.reset();
-        if (options.play === undefined) {
+        if (options.play !== false) {
             this.play();
         }
     }
