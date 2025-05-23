@@ -755,6 +755,11 @@ class Animator {
 
     seek(time) {
         this.actions.forEach((action) => {
+            // If action is paused, temporarily unpause it for seeking
+            const wasPaused = action.paused;
+            if (wasPaused) {
+                action.paused = false;
+            }
             action.time = Math.max(0, Math.min(action._clip.duration, time));
         });
         this.mixer.update(0);
@@ -872,12 +877,19 @@ class Animator {
                 // Clamp time display to duration if it slightly overshoots
                 this.time = Math.min(current_time, this.duration);
                 this.display_progress(this.time);
+                
+                // Pause when we're very close to the end (99.5%) to prevent Three.js from pausing actions
+                if (this.time >= this.duration * 0.995) {
+                    console.log("Animation reached near end, pausing to maintain seekability.");
+                    this.pause();
+                    return;
+                }
             } else {
                 this.time = 0;
                 this.display_progress(0);
             }
 
-            // Check 1: If animation naturally pauses (non-looping completed)
+            // Check 1: If animation naturally pauses (non-looping completed) - fallback
             if (this.actions.every((action) => action.paused)) {
                 console.log("Animation naturally paused.");
                 this.pause(); // Automatically pauses when animation ends
@@ -975,6 +987,11 @@ class Viewer {
         window.addEventListener('resize', (evt) => this.set_3d_pane_size(), false);
 
         window.addEventListener('keydown', (event) => {
+            // Don't trigger shortcuts if user is typing in an input field
+            if (event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA' || event.target.isContentEditable) {
+                return;
+            }
+
             const frameStep = 1 / 30;
             let currentTime = this.animator.time;
             let duration = this.animator.duration;
